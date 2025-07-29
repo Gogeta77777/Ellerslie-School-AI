@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ellerslie School AI - Your Intelligent Learning Assistant</title>
+    <meta name="description" content="Ellerslie School AI - Advanced AI-powered learning assistant with multiple models for students and educators">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Ellerslie School AI</span>
+                </div>
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                    New Chat
+                </button>
+            </div>
+            
+            <div class="model-selector">
+                <label for="modelSelect">Choose AI Model:</label>
+                <select id="modelSelect" class="model-dropdown">
+                    <option value="gpt-4">GPT-4 (OpenAI)</option>
+                    <option value="claude-3">Claude 3 (Anthropic)</option>
+                    <option value="gemini-pro">Gemini Pro (Google)</option>
+                    <option value="llama-2">Llama 2 (Meta)</option>
+                    <option value="mistral">Mistral (Mistral AI)</option>
+                </select>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3>Recent Chats</h3>
+                    <div class="chat-history" id="chatHistory">
+                        <!-- Chat history will be populated here -->
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="settings-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>Student</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <header class="chat-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="currentModel">GPT-4</h1>
+                </div>
+                <div class="header-right">
+                    <button class="share-btn" id="shareBtn">
+                        <i class="fas fa-share"></i>
+                    </button>
+                    <button class="export-btn" id="exportBtn">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-content">
+                        <div class="ai-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h2>Welcome to Ellerslie School AI</h2>
+                        <p>Your intelligent learning assistant powered by multiple AI models</p>
+                        
+                        <div class="model-cards">
+                            <div class="model-card" data-model="gpt-4">
+                                <div class="model-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <h3>GPT-4</h3>
+                                <p>Advanced reasoning and analysis</p>
+                            </div>
+                            <div class="model-card" data-model="claude-3">
+                                <div class="model-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <h3>Claude 3</h3>
+                                <p>Creative writing and coding</p>
+                            </div>
+                            <div class="model-card" data-model="gemini-pro">
+                                <div class="model-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <h3>Gemini Pro</h3>
+                                <p>Multimodal understanding</p>
+                            </div>
+                            <div class="model-card" data-model="llama-2">
+                                <div class="model-icon">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <h3>Llama 2</h3>
+                                <p>Open-source intelligence</p>
+                            </div>
+                            <div class="model-card" data-model="mistral">
+                                <div class="model-icon">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <h3>Mistral</h3>
+                                <p>Fast and efficient responses</p>
+                            </div>
+                        </div>
+
+                        <div class="quick-prompts">
+                            <h3>Quick Start Prompts</h3>
+                            <div class="prompt-grid">
+                                <button class="prompt-btn" data-prompt="Help me understand quantum physics">
+                                    <i class="fas fa-atom"></i>
+                                    Quantum Physics
+                                </button>
+                                <button class="prompt-btn" data-prompt="Write a Python script for data analysis">
+                                    <i class="fas fa-code"></i>
+                                    Python Coding
+                                </button>
+                                <button class="prompt-btn" data-prompt="Explain the French Revolution">
+                                    <i class="fas fa-landmark"></i>
+                                    History
+                                </button>
+                                <button class="prompt-btn" data-prompt="Solve this math problem: 2x + 5 = 13">
+                                    <i class="fas fa-calculator"></i>
+                                    Math Help
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="messages-container" id="messagesContainer" style="display: none;">
+                    <!-- Messages will be populated here -->
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Ask Ellerslie School AI anything..."
+                        rows="1"
+                        maxlength="4000"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button class="attach-btn" id="attachBtn" title="Attach file">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="send-btn" id="sendBtn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-footer">
+                    <span class="char-count" id="charCount">0/4000</span>
+                    <span class="model-info" id="modelInfo">Powered by GPT-4</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-btn" id="closeSettingsBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <h3>API Configuration</h3>
+                    <div class="api-config">
+                        <div class="api-item">
+                            <label>OpenAI API Key:</label>
+                            <input type="password" id="openaiKey" placeholder="sk-...">
+                        </div>
+                        <div class="api-item">
+                            <label>Anthropic API Key:</label>
+                            <input type="password" id="anthropicKey" placeholder="sk-ant-...">
+                        </div>
+                        <div class="api-item">
+                            <label>Google API Key:</label>
+                            <input type="password" id="googleKey" placeholder="AIza...">
+                        </div>
+                        <div class="api-item">
+                            <label>Mistral API Key:</label>
+                            <input type="password" id="mistralKey" placeholder="...">
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h3>Preferences</h3>
+                    <div class="preference-item">
+                        <label>
+                            <input type="checkbox" id="autoSave"> Auto-save conversations
+                        </label>
+                    </div>
+                    <div class="preference-item">
+                        <label>
+                            <input type="checkbox" id="darkMode"> Dark mode
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelSettingsBtn">Cancel</button>
+                <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Ellerslie School AI is thinking...</p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/ai-models.js"></script>
+    <script src="js/chat-manager.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
