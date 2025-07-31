@@ -1,0 +1,99 @@
+{
+  "name": "ellerslie-school-ai",
+  "version": "1.0.0",
+  "description": "Intelligent learning assistant powered by multiple AI models",
+  "main": "index.html",
+  "scripts": {
+    "start": "firebase serve",
+    "build": "echo 'No build step required - static files only'",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:firestore": "firebase deploy --only firestore",
+    "deploy:storage": "firebase deploy --only storage",
+    "deploy:rules": "firebase deploy --only firestore:rules,storage",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linter configured'",
+    "format": "prettier --write .",
+    "serve": "firebase serve --only hosting",
+    "emulators": "firebase emulators:start",
+    "setup": "firebase init",
+    "login": "firebase login",
+    "logout": "firebase logout",
+    "projects:list": "firebase projects:list",
+    "use": "firebase use",
+    "functions:config:get": "firebase functions:config:get",
+    "functions:config:set": "firebase functions:config:set"
+  },
+  "keywords": [
+    "ai",
+    "chatbot",
+    "education",
+    "learning",
+    "firebase",
+    "pwa",
+    "openai",
+    "anthropic",
+    "google",
+    "mistral",
+    "llama"
+  ],
+  "author": {
+    "name": "Ellerslie School AI Team",
+    "email": "support@ellerslie-school-ai.com",
+    "url": "https://ellerslie-school-ai.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/ellerslie-school-ai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/ellerslie-school-ai/issues"
+  },
+  "homepage": "https://ellerslie-school-ai.com",
+  "devDependencies": {
+    "firebase-tools": "^13.0.0",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "pwa": {
+    "name": "Ellerslie School AI",
+    "short_name": "Ellerslie AI",
+    "description": "Intelligent learning assistant powered by multiple AI models",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#10a37f",
+    "icons": [
+      {
+        "src": "assets/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  },
+  "firebase": {
+    "hosting": {
+      "public": ".",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  }
+}

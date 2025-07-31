@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can only access their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // User's chats
+      match /chats/{chatId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+        
+        // Chat messages
+        match /messages/{messageId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+      }
+    }
+    
+    // Public app data (read-only)
+    match /app/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
