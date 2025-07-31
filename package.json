@@ -11,6 +11,7 @@
     "deploy:firestore": "firebase deploy --only firestore",
     "deploy:storage": "firebase deploy --only storage",
     "deploy:rules": "firebase deploy --only firestore:rules,storage",
+    "deploy:quick": "./firebase-deploy.sh",
     "test": "echo 'No tests specified'",
     "lint": "echo 'No linter configured'",
     "format": "prettier --write .",
@@ -22,7 +23,9 @@
     "projects:list": "firebase projects:list",
     "use": "firebase use",
     "functions:config:get": "firebase functions:config:get",
-    "functions:config:set": "firebase functions:config:set"
+    "functions:config:set": "firebase functions:config:set",
+    "update": "git pull && firebase deploy",
+    "status": "firebase hosting:releases:list"
   },
   "keywords": [
     "ai",
