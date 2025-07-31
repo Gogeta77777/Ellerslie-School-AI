@@ -23,14 +23,16 @@ class EllerslieSchoolAI {
 
     async initializeApp() {
         try {
-            // Initialize Firebase Auth
-            await this.initializeAuth();
+            // Wait for authentication to be ready
+            await this.waitForAuth();
 
             // Initialize UI
             window.UIManager.initialize();
 
-            // Initialize chat manager
-            await window.ChatManager.loadConversations();
+            // Initialize chat manager if authenticated
+            if (window.AuthManager.isAuthenticated()) {
+                await window.ChatManager.loadConversations();
+            }
 
             // Set up service worker for PWA
             this.registerServiceWorker();
@@ -42,7 +44,11 @@ class EllerslieSchoolAI {
             this.initialized = true;
 
             console.log('✅ Ellerslie School AI initialized successfully!');
-            this.showWelcomeMessage();
+            
+            // Show welcome message only if authenticated
+            if (window.AuthManager.isAuthenticated()) {
+                this.showWelcomeMessage();
+            }
 
         } catch (error) {
             console.error('Error during app initialization:', error);
@@ -50,55 +56,37 @@ class EllerslieSchoolAI {
         }
     }
 
-    // Initialize Firebase Authentication
-    async initializeAuth() {
-        try {
-            // Listen for auth state changes
-            window.FirebaseConfig.auth.onAuthStateChanged((user) => {
-                if (user) {
-                    console.log('User signed in:', user.email);
-                    this.handleUserSignIn(user);
-                } else {
-                    console.log('User signed out');
-                    this.handleUserSignOut();
-                }
-            });
-
-            // Try to sign in anonymously if no user
-            const currentUser = window.FirebaseConfig.auth.currentUser;
-            if (!currentUser) {
-                await window.FirebaseConfig.auth.signInAnonymously();
+    // Wait for authentication to be ready
+    async waitForAuth() {
+        return new Promise((resolve) => {
+            // Check if AuthManager is already initialized
+            if (window.AuthManager) {
+                resolve();
+                return;
             }
 
-        } catch (error) {
-            console.error('Auth initialization error:', error);
-            // Continue without auth for demo purposes
-        }
+            // Wait for AuthManager to be ready
+            const checkAuth = () => {
+                if (window.AuthManager) {
+                    resolve();
+                } else {
+                    setTimeout(checkAuth, 100);
+                }
+            };
+            checkAuth();
+        });
     }
 
     // Handle user sign in
     handleUserSignIn(user) {
-        // Update UI to show user info
-        const userInfo = document.querySelector('.user-info span');
-        if (userInfo) {
-            userInfo.textContent = user.email || 'Student';
-        }
-
-        // Load user's conversations
-        window.ChatManager.loadConversations();
+        // This is now handled by AuthManager
+        console.log('User signed in:', user.email);
     }
 
     // Handle user sign out
     handleUserSignOut() {
-        // Reset UI
-        const userInfo = document.querySelector('.user-info span');
-        if (userInfo) {
-            userInfo.textContent = 'Student';
-        }
-
-        // Clear conversations
-        window.ChatManager.conversations.clear();
-        window.ChatManager.updateChatHistory();
+        // This is now handled by AuthManager
+        console.log('User signed out');
     }
 
     // Register service worker for PWA

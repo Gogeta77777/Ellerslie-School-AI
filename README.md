@@ -34,10 +34,13 @@ An intelligent learning assistant powered by multiple AI models, designed specif
 - Offline support with service worker
 
 ### 🔐 Security & Privacy
-- Firebase Authentication
-- Secure API key management
-- User data isolation
-- GDPR compliant
+- **Username/Password Authentication** - Secure login system
+- **Account Management** - User profiles with preferences
+- **Password Reset** - Email-based password recovery
+- **Session Persistence** - Stay logged in across browser sessions
+- **Secure API Key Management** - Encrypted storage of API keys
+- **User Data Isolation** - Each user's data is completely separate
+- **GDPR Compliant** - Privacy-focused design
 
 ## 🚀 Quick Start
 
@@ -64,23 +67,31 @@ An intelligent learning assistant powered by multiple AI models, designed specif
    firebase login
    ```
 
-4. **Initialize Firebase project**
-   ```bash
-   firebase init
-   ```
-   - Select your Firebase project
-   - Choose Hosting, Firestore, and Storage
-   - Use the existing `firebase.json` configuration
+4. **Create Firebase Project**
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Create a new project
+   - Enable Authentication (Email/Password)
+   - Enable Firestore Database
+   - Enable Storage
 
-5. **Configure API Keys**
+5. **Configure Firebase**
    - Open `js/firebase-config.js`
-   - Replace the placeholder Firebase config with your actual Firebase project details
-   - Add your API keys in the settings modal within the app
+   - Replace the placeholder config with your actual Firebase project details
+   - Update the config with your project's API key, auth domain, etc.
 
 6. **Deploy to Firebase**
    ```bash
+   ./deploy.sh
+   ```
+   Or manually:
+   ```bash
    firebase deploy
    ```
+
+7. **Configure API Keys**
+   - Open your deployed app
+   - Sign up for a new account
+   - Go to Settings and add your API keys for the AI models you want to use
 
 ## 🔧 Configuration
 

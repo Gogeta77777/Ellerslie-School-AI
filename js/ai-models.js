@@ -84,6 +84,16 @@ class AIModels {
         this.apiKeys = { ...this.apiKeys, ...keys };
     }
 
+    // Save API keys to localStorage
+    saveAPIKeys(keys) {
+        Object.keys(keys).forEach(key => {
+            if (keys[key]) {
+                localStorage.setItem(`${key}_api_key`, keys[key]);
+            }
+        });
+        this.apiKeys = { ...this.apiKeys, ...keys };
+    }
+
     // Get current model configuration
     getCurrentModel() {
         return this.models[this.currentModel];

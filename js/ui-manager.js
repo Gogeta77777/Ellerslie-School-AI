@@ -245,8 +245,10 @@ class UIManager {
         document.getElementById('anthropicKey').value = settings.anthropicKey || '';
         document.getElementById('googleKey').value = settings.googleKey || '';
         document.getElementById('mistralKey').value = settings.mistralKey || '';
+        document.getElementById('replicateKey').value = settings.replicateKey || '';
         document.getElementById('autoSave').checked = settings.autoSave !== false;
         document.getElementById('darkMode').checked = settings.darkMode === true;
+        document.getElementById('notifications').checked = settings.notifications !== false;
     }
 
     // Save settings
@@ -448,6 +450,23 @@ class UIManager {
         }, 3000);
     }
 
+    // Handle clear conversation
+    handleClearConversation() {
+        if (confirm('Are you sure you want to clear this conversation? This action cannot be undone.')) {
+            // Clear current conversation
+            window.ChatManager.currentConversation = [];
+            
+            // Clear messages container
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '';
+            
+            // Show welcome screen
+            window.ChatManager.showWelcomeScreen();
+            
+            this.showNotification('Conversation cleared successfully!', 'success');
+        }
+    }
+
     // Show error
     showError(message) {
         this.showNotification(message, 'error');
@@ -463,6 +482,28 @@ class UIManager {
         // Apply saved settings
         const settings = this.loadSettings();
         this.toggleDarkMode(settings.darkMode);
+        
+        // Load user preferences if authenticated
+        if (window.AuthManager.isAuthenticated()) {
+            const userPrefs = window.AuthManager.getUserPreferences();
+            this.applyUserPreferences(userPrefs);
+        }
+    }
+
+    // Apply user preferences
+    applyUserPreferences(preferences) {
+        if (preferences.darkMode !== undefined) {
+            this.toggleDarkMode(preferences.darkMode);
+        }
+        
+        // Update settings modal if open
+        const darkModeToggle = document.getElementById('darkMode');
+        const autoSaveToggle = document.getElementById('autoSave');
+        const notificationsToggle = document.getElementById('notifications');
+        
+        if (darkModeToggle) darkModeToggle.checked = preferences.darkMode || false;
+        if (autoSaveToggle) autoSaveToggle.checked = preferences.autoSave !== false;
+        if (notificationsToggle) notificationsToggle.checked = preferences.notifications !== false;
     }
 }
 
