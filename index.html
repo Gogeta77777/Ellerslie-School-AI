@@ -9,9 +9,78 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="app-container">
+    <!-- Authentication Overlay -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-container">
+            <div class="auth-box">
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Ellerslie School AI</span>
+                    </div>
+                    <p>Sign in to access your AI learning assistant</p>
+                </div>
+                
+                <!-- Login Form -->
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Sign In</button>
+                    <div class="auth-links">
+                        <a href="#" id="showSignup">Don't have an account? Sign up</a>
+                        <a href="#" id="forgotPassword">Forgot password?</a>
+                    </div>
+                </form>
+
+                <!-- Signup Form -->
+                <form class="auth-form" id="signupForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="signupUsername">Username</label>
+                        <input type="text" id="signupUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Create Account</button>
+                    <div class="auth-links">
+                        <a href="#" id="showLogin">Already have an account? Sign in</a>
+                    </div>
+                </form>
+
+                <!-- Forgot Password Form -->
+                <form class="auth-form" id="forgotForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="forgotEmail">Email</label>
+                        <input type="email" id="forgotEmail" required>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Reset Password</button>
+                    <div class="auth-links">
+                        <a href="#" id="backToLogin">Back to Sign In</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer" style="display: none;">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -54,7 +123,12 @@
                     <div class="user-avatar">
                         <i class="fas fa-user"></i>
                     </div>
-                    <span>Student</span>
+                    <div class="user-details">
+                        <span id="userDisplayName">Student</span>
+                        <button class="logout-btn" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -69,11 +143,14 @@
                     <h1 id="currentModel">GPT-4</h1>
                 </div>
                 <div class="header-right">
-                    <button class="share-btn" id="shareBtn">
+                    <button class="share-btn" id="shareBtn" title="Share conversation">
                         <i class="fas fa-share"></i>
                     </button>
-                    <button class="export-btn" id="exportBtn">
+                    <button class="export-btn" id="exportBtn" title="Export conversation">
                         <i class="fas fa-download"></i>
+                    </button>
+                    <button class="clear-btn" id="clearBtn" title="Clear conversation">
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
             </header>
@@ -208,6 +285,10 @@
                             <label>Mistral API Key:</label>
                             <input type="password" id="mistralKey" placeholder="...">
                         </div>
+                        <div class="api-item">
+                            <label>Replicate API Key:</label>
+                            <input type="password" id="replicateKey" placeholder="r8_...">
+                        </div>
                     </div>
                 </div>
                 <div class="setting-group">
@@ -222,11 +303,54 @@
                             <input type="checkbox" id="darkMode"> Dark mode
                         </label>
                     </div>
+                    <div class="preference-item">
+                        <label>
+                            <input type="checkbox" id="notifications"> Enable notifications
+                        </label>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h3>Account</h3>
+                    <div class="account-info">
+                        <p><strong>Username:</strong> <span id="settingsUsername"></span></p>
+                        <p><strong>Email:</strong> <span id="settingsEmail"></span></p>
+                        <button class="btn-secondary" id="changePasswordBtn">Change Password</button>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-secondary" id="cancelSettingsBtn">Cancel</button>
                 <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal" id="changePasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Change Password</h2>
+                <button class="close-btn" id="closePasswordBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">Confirm New Password</label>
+                    <input type="password" id="confirmNewPassword" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelPasswordBtn">Cancel</button>
+                <button class="btn-primary" id="savePasswordBtn">Change Password</button>
             </div>
         </div>
     </div>
@@ -247,6 +371,7 @@
     
     <!-- App Scripts -->
     <script src="js/firebase-config.js"></script>
+    <script src="js/auth-manager.js"></script>
     <script src="js/ai-models.js"></script>
     <script src="js/chat-manager.js"></script>
     <script src="js/ui-manager.js"></script>

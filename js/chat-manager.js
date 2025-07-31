@@ -295,12 +295,12 @@ class ChatManager {
     // Load conversations from Firebase
     async loadConversations() {
         try {
-            const user = this.auth.currentUser;
-            if (!user) return;
+            const currentUser = window.AuthManager.getCurrentUser();
+            if (!currentUser) return;
 
             const snapshot = await this.db
                 .collection('users')
-                .doc(user.uid)
+                .doc(currentUser.uid)
                 .collection('chats')
                 .orderBy('updatedAt', 'desc')
                 .get();
@@ -320,12 +320,12 @@ class ChatManager {
     // Save chat to Firebase
     async saveChatToFirebase(chatData) {
         try {
-            const user = this.auth.currentUser;
-            if (!user) return;
+            const currentUser = window.AuthManager.getCurrentUser();
+            if (!currentUser) return;
 
             await this.db
                 .collection('users')
-                .doc(user.uid)
+                .doc(currentUser.uid)
                 .collection('chats')
                 .doc(chatData.id)
                 .set(chatData);
@@ -337,12 +337,12 @@ class ChatManager {
     // Update chat in Firebase
     async updateChatInFirebase(chatData) {
         try {
-            const user = this.auth.currentUser;
-            if (!user) return;
+            const currentUser = window.AuthManager.getCurrentUser();
+            if (!currentUser) return;
 
             await this.db
                 .collection('users')
-                .doc(user.uid)
+                .doc(currentUser.uid)
                 .collection('chats')
                 .doc(chatData.id)
                 .update(chatData);
@@ -354,12 +354,12 @@ class ChatManager {
     // Save message to Firebase
     async saveMessageToFirebase(message) {
         try {
-            const user = this.auth.currentUser;
-            if (!user) return;
+            const currentUser = window.AuthManager.getCurrentUser();
+            if (!currentUser) return;
 
             await this.db
                 .collection('users')
-                .doc(user.uid)
+                .doc(currentUser.uid)
                 .collection('chats')
                 .doc(this.currentChatId)
                 .collection('messages')
@@ -373,12 +373,12 @@ class ChatManager {
     // Load messages from Firebase
     async loadMessagesFromFirebase(chatId) {
         try {
-            const user = this.auth.currentUser;
-            if (!user) return;
+            const currentUser = window.AuthManager.getCurrentUser();
+            if (!currentUser) return;
 
             const snapshot = await this.db
                 .collection('users')
-                .doc(user.uid)
+                .doc(currentUser.uid)
                 .collection('chats')
                 .doc(chatId)
                 .collection('messages')
@@ -454,13 +454,13 @@ class ChatManager {
     // Delete conversation
     async deleteConversation(chatId) {
         try {
-            const user = this.auth.currentUser;
-            if (!user) return;
+            const currentUser = window.AuthManager.getCurrentUser();
+            if (!currentUser) return;
 
             // Delete from Firebase
             await this.db
                 .collection('users')
-                .doc(user.uid)
+                .doc(currentUser.uid)
                 .collection('chats')
                 .doc(chatId)
                 .delete();
@@ -468,7 +468,7 @@ class ChatManager {
             // Delete messages
             const messagesSnapshot = await this.db
                 .collection('users')
-                .doc(user.uid)
+                .doc(currentUser.uid)
                 .collection('chats')
                 .doc(chatId)
                 .collection('messages')

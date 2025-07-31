@@ -76,6 +76,11 @@ class UIManager {
             window.ChatManager.exportConversation();
         });
 
+        // Clear conversation
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            this.handleClearConversation();
+        });
+
         // Sidebar toggle (mobile)
         document.getElementById('sidebarToggle').addEventListener('click', () => {
             this.toggleSidebar();
@@ -251,8 +256,10 @@ class UIManager {
             anthropicKey: document.getElementById('anthropicKey').value,
             googleKey: document.getElementById('googleKey').value,
             mistralKey: document.getElementById('mistralKey').value,
+            replicateKey: document.getElementById('replicateKey').value,
             autoSave: document.getElementById('autoSave').checked,
-            darkMode: document.getElementById('darkMode').checked
+            darkMode: document.getElementById('darkMode').checked,
+            notifications: document.getElementById('notifications').checked
         };
 
         // Save API keys to AI models
@@ -260,11 +267,22 @@ class UIManager {
             openai: settings.openaiKey,
             anthropic: settings.anthropicKey,
             google: settings.googleKey,
-            mistral: settings.mistralKey
+            mistral: settings.mistralKey,
+            replicate: settings.replicateKey
         });
 
         // Save settings to localStorage
         localStorage.setItem('ellerslie_ai_settings', JSON.stringify(settings));
+
+        // Update user preferences in Firebase
+        if (window.AuthManager.isAuthenticated()) {
+            const preferences = {
+                autoSave: settings.autoSave,
+                darkMode: settings.darkMode,
+                notifications: settings.notifications
+            };
+            window.AuthManager.updateUserPreferences(preferences);
+        }
 
         // Apply dark mode
         this.toggleDarkMode(settings.darkMode);
@@ -276,10 +294,24 @@ class UIManager {
     // Load settings from localStorage
     loadSettings() {
         const saved = localStorage.getItem('ellerslie_ai_settings');
-        return saved ? JSON.parse(saved) : {
+        const defaultSettings = {
             autoSave: true,
-            darkMode: false
+            darkMode: false,
+            notifications: true
         };
+
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            return { ...defaultSettings, ...parsed };
+        }
+
+        // If user is authenticated, try to load from Firebase
+        if (window.AuthManager.isAuthenticated()) {
+            const userPrefs = window.AuthManager.getUserPreferences();
+            return { ...defaultSettings, ...userPrefs };
+        }
+
+        return defaultSettings;
     }
 
     // Toggle dark mode
